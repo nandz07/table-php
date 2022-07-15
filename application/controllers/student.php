@@ -217,13 +217,68 @@ class student extends CI_Controller
 		$query=$this->db->get("");
 		$res=$query->result();
 
+		$db_firstName =NULL;
+		$db_password=NULL;
+		
+
 		foreach($res as $detais){
 			$db_firstName = $detais->firstName;
 			$db_password= $detais->password;
 		}
 
+		
+
+
 		if(isset($_SESSION['uname'])){
+			?>
+				<script>
+					alert("you didn't logout")
+					window.location.href="<?php echo base_url('student/productsDetails2') ?>";
+				</script>
+			<?php
+		}elseif($db_firstName==$firstName && $db_password==$password){
+			$_SESSION['uname']=$db_firstName;
+			?>
+				<script>
+					alert("login sucess")
+					window.location.href="<?php echo base_url('student/productsDetails2') ?>";
+				</script>
+			<?php
+		}else{
+			?>
+				<script>
+					alert("Invalid user name or pasword !")
+					window.location.href="<?php echo base_url('student/login2') ?>";
+				</script>
+			<?php
+		}
+
+	}
+	public function productsDetails2(){
+		session_start();
+		if($_SESSION['uname'] != NULL){
 			$this->load->view("products2");
+		}else{
+			?>
+				<script>
+					alert("enter username and password")
+					window.location.href="<?php echo base_url('student/login2') ?>";
+				</script>
+			<?php
+		}
+		
+
+	}
+	public function logout2(){
+		session_start();
+		if(isset($_SESSION['uname'])){
+			session_destroy();
+			?>
+				<script>
+					alert("Logout successfully !")
+					window.location.href="<?php echo base_url('student/login2') ?>";
+				</script>
+			<?php
 		}
 
 	}
