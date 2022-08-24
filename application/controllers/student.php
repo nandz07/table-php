@@ -282,4 +282,55 @@ class student extends CI_Controller
 		}
 
 	}
+	public function login3(){
+		$this->load->view("login3_view");
+
+	}
+	public function loginCheck3(){
+		session_start();
+		$firstName=$this->input->post("firstName");
+		$password=$this->input->post("password");
+
+
+		$this->db->select("*");
+		$this->db->from("user");
+		$this->db->where("firstName",$firstName);
+		$this->db->where("password",$password);
+		$sql=$this->db->get("");
+		$res=$sql->result();
+		$db_firstName =NULL;
+		$db_password=NULL;
+
+		foreach($res as $ans){
+			$db_firstName=$ans->firstName;
+			$db_password=$ans->password;
+			$db_id=$ans->id;
+		}if(isset($_SESSION['uname'] )){
+			?>
+				<script>
+					alert("logined")
+					window.location.href="<?php echo base_url('student/productsDetails3') ?>";
+				</script>
+			<?php
+		}
+		elseif($db_firstName == $firstName && $db_password == $password){
+			$_SESSION['uname']=$db_firstName;
+			$_SESSION['userid']=$db_id;
+			?>
+				<script>
+					alert("login success")
+					window.location.href="<?php echo base_url('student/productsDetails3') ;?>"
+				</script>
+			<?php
+		}else{
+			?>
+				<script>
+					alert("invalid user name or password !")
+					window.location.href="<?php echo base_url('student/productsDetails3') ;?>"
+				</script>
+			<?php
+		}
+
+	}
+	
 }
